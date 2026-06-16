@@ -1,0 +1,16 @@
+C:\Users\lenovo\RiderProjects\ClassIslandCLI\ClassIslandCLIAddon\bin\Debug\net8.0-windows\icon.png
+C:\Users\lenovo\RiderProjects\ClassIslandCLI\ClassIslandCLIAddon\bin\Debug\net8.0-windows\manifest.yml
+C:\Users\lenovo\RiderProjects\ClassIslandCLI\ClassIslandCLIAddon\bin\Debug\net8.0-windows\README.md
+C:\Users\lenovo\RiderProjects\ClassIslandCLI\ClassIslandCLIAddon\bin\Debug\net8.0-windows\ClassIslandCLIAddon.deps.json
+C:\Users\lenovo\RiderProjects\ClassIslandCLI\ClassIslandCLIAddon\bin\Debug\net8.0-windows\ClassIslandCLIAddon.dll
+C:\Users\lenovo\RiderProjects\ClassIslandCLI\ClassIslandCLIAddon\bin\Debug\net8.0-windows\ClassIslandCLIAddon.pdb
+C:\Users\lenovo\RiderProjects\ClassIslandCLI\ClassIslandCLIAddon\obj\Debug\net8.0-windows\ClassIslandCLIAddon.csproj.AssemblyReference.cache
+C:\Users\lenovo\RiderProjects\ClassIslandCLI\ClassIslandCLIAddon\obj\Debug\net8.0-windows\Avalonia\Resources.Inputs.cache
+C:\Users\lenovo\RiderProjects\ClassIslandCLI\ClassIslandCLIAddon\obj\Debug\net8.0-windows\ClassIslandCLIAddon.GeneratedMSBuildEditorConfig.editorconfig
+C:\Users\lenovo\RiderProjects\ClassIslandCLI\ClassIslandCLIAddon\obj\Debug\net8.0-windows\ClassIslandCLIAddon.AssemblyInfoInputs.cache
+C:\Users\lenovo\RiderProjects\ClassIslandCLI\ClassIslandCLIAddon\obj\Debug\net8.0-windows\ClassIslandCLIAddon.AssemblyInfo.cs
+C:\Users\lenovo\RiderProjects\ClassIslandCLI\ClassIslandCLIAddon\obj\Debug\net8.0-windows\ClassIslandCLIAddon.csproj.CoreCompileInputs.cache
+C:\Users\lenovo\RiderProjects\ClassIslandCLI\ClassIslandCLIAddon\obj\Debug\net8.0-windows\ClassIslandCLIAddon.dll
+C:\Users\lenovo\RiderProjects\ClassIslandCLI\ClassIslandCLIAddon\obj\Debug\net8.0-windows\refint\ClassIslandCLIAddon.dll
+C:\Users\lenovo\RiderProjects\ClassIslandCLI\ClassIslandCLIAddon\obj\Debug\net8.0-windows\ClassIslandCLIAddon.pdb
+C:\Users\lenovo\RiderProjects\ClassIslandCLI\ClassIslandCLIAddon\obj\Debug\net8.0-windows\ref\ClassIslandCLIAddon.dll
