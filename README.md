@@ -1,0 +1,2 @@
+# ClassIslandCLI
+ClassIsland的CLI客户端，方便Openclaw接入控制ClassIsland
