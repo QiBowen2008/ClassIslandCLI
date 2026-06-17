@@ -30,3 +30,4 @@ D:\MyFiles\ClassIslandCLI\ClassIslandCLI\obj\Debug\net8.0\refint\ClassIslandCLI.
 D:\MyFiles\ClassIslandCLI\ClassIslandCLI\obj\Debug\net8.0\ClassIslandCLI.pdb
 D:\MyFiles\ClassIslandCLI\ClassIslandCLI\obj\Debug\net8.0\ClassIslandCLI.genruntimeconfig.cache
 D:\MyFiles\ClassIslandCLI\ClassIslandCLI\obj\Debug\net8.0\ref\ClassIslandCLI.dll
+D:\MyFiles\ClassIslandCLI\ClassIslandCLI\obj\Debug\net8.0\ClassIslandCLI.sourcelink.json

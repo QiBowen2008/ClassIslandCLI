@@ -227,5 +227,39 @@ public static class ProfileManager
             var subjects = root["Subjects"];
             Console.WriteLine(subjects.ToString());
         }
+
+        /// <summary>
+        /// 根据科目名称删除一个科目。
+        /// </summary>
+        public static void DeleteSubject(string name)
+        {
+            var subjects = root["Subjects"] as JsonObject;
+            if (subjects == null)
+            {
+                Console.WriteLine("错误：无法找到 Subjects 节点");
+                return;
+            }
+
+            string? targetKey = null;
+            foreach (var subject in subjects)
+            {
+                var subjectObj = subject.Value as JsonObject;
+                if (subjectObj != null && subjectObj["Name"]?.GetValue<string>() == name)
+                {
+                    targetKey = subject.Key;
+                    break;
+                }
+            }
+
+            if (targetKey == null)
+            {
+                Console.WriteLine($"错误：未找到名称为 \"{name}\" 的科目");
+                return;
+            }
+
+            subjects.Remove(targetKey);
+            SaveProfile();
+            Console.WriteLine($"已删除科目：{name}（ID: {targetKey}）");
+        }
     }
 }

@@ -77,6 +77,17 @@ class Program
                 ProfileManager.SubjectManager.GetSubjects();
             }
 
+            if (args[i] == "--DeleteSubject")
+            {
+                if (i + 1 >= args.Length)
+                {
+                    Console.WriteLine("用法: --DeleteSubject <科目名称>");
+                    return;
+                }
+                string name = args[i + 1];
+                ProfileManager.SubjectManager.DeleteSubject(name);
+            }
+
             if (args[i] == "--GetTimelayouts")
             {
                 ProfileManager.TimeLayoutManager.GetTimelayouts();
