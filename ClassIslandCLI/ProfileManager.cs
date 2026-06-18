@@ -45,12 +45,46 @@ public static class ProfileManager
 
     public static class TimeLayoutManager
     {
-        public static void GetTimelayouts()
+       public static void GetTimelayouts()
+       {
+           var timelayouts = root["TimeLayouts"];
+           Console.WriteLine(timelayouts.ToString());
+       }
+
+        /// <summary>
+        /// 根据时间表名称删除一个时间表。
+        /// </summary>
+        public static void DeleteTimeLayout(string name)
         {
-            var timelayouts = root["TimeLayouts"];
-            Console.WriteLine(timelayouts.ToString());
+            var timeLayouts = root["TimeLayouts"] as JsonObject;
+            if (timeLayouts == null)
+            {
+                Console.WriteLine("错误：无法找到 TimeLayouts 节点");
+                return;
+            }
+
+            string? targetKey = null;
+            foreach (var layout in timeLayouts)
+            {
+                var layoutObj = layout.Value as JsonObject;
+                if (layoutObj != null && layoutObj["Name"]?.GetValue<string>() == name)
+                {
+                    targetKey = layout.Key;
+                    break;
+                }
+            }
+
+            if (targetKey == null)
+            {
+                Console.WriteLine($"错误：未找到名称为 \"{name}\" 的时间表");
+                return;
+            }
+
+            timeLayouts.Remove(targetKey);
+            SaveProfile();
+            Console.WriteLine($"已删除时间表：{name}（ID: {targetKey}）");
         }
-    }
+   }
 
     public static class ClassPlanManager
     {
