@@ -10,6 +10,7 @@ class Program
        Console.WriteLine("--GetClassplans:获取课表信息（含科目名称）");
        Console.WriteLine("--AddSubject <名称> <缩写> <是否室外课(true/false)> [教师名称] [可选参数...]");
         Console.WriteLine("--DeleteTimeLayout <时间表名称>:删除指定名称的时间表");
+                Console.WriteLine("--AddTimeLayout <时间表名称>:添加一个新时间表");
        Console.WriteLine("  可选参数（--key value 形式）：");
                 Console.WriteLine("    --ClassOnNotificationEnabled <true/false>");
                 Console.WriteLine("    --ClassOnPreparingNotificationEnabled <true/false>");
@@ -88,6 +89,17 @@ class Program
                string name = args[i + 1];
                ProfileManager.SubjectManager.DeleteSubject(name);
            }
+
+            if (args[i] == "--AddTimeLayout")
+            {
+                if (i + 1 >= args.Length)
+                {
+                    Console.WriteLine("用法: --AddTimeLayout <时间表名称>");
+                    return;
+                }
+                string name = args[i + 1];
+                ProfileManager.TimeLayoutManager.AddTimeLayout(name);
+            }
 
             if (args[i] == "--DeleteTimeLayout")
             {

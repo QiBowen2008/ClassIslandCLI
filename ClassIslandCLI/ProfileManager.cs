@@ -52,6 +52,46 @@ public static class ProfileManager
        }
 
         /// <summary>
+        /// 添加一个新时间表。
+        /// </summary>
+        public static void AddTimeLayout(string name)
+        {
+            var timeLayouts = root["TimeLayouts"] as JsonObject;
+            if (timeLayouts == null)
+            {
+                Console.WriteLine("错误：无法找到 TimeLayouts 节点");
+                return;
+            }
+
+            // 检查是否已存在同名时间表
+            foreach (var layout in timeLayouts)
+            {
+                var layoutObj = layout.Value as JsonObject;
+                if (layoutObj != null && layoutObj["Name"]?.GetValue<string>() == name)
+                {
+                    Console.WriteLine($"错误：已存在名称为 \"{name}\" 的时间表");
+                    return;
+                }
+            }
+
+            string id = Guid.NewGuid().ToString();
+
+            var newTimeLayout = new JsonObject
+            {
+                ["IsOverlay"] = false,
+                ["OverlaySourceId"] = null,
+                ["Name"] = name,
+                ["Layouts"] = new JsonArray(),
+                ["AttachedObjects"] = new JsonObject(),
+                ["IsActive"] = false
+            };
+
+            timeLayouts[id] = newTimeLayout;
+            SaveProfile();
+            Console.WriteLine($"已添加时间表：{name}（ID: {id}）");
+        }
+
+        /// <summary>
         /// 根据时间表名称删除一个时间表。
         /// </summary>
         public static void DeleteTimeLayout(string name)
