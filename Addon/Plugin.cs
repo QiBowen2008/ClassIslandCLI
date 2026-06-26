@@ -19,7 +19,7 @@ namespace Addon
             string libraryDirectory = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
             PathManager.AddToUserPath (libraryDirectory);   
             AppBase.Current.AppStarted += async (_, _) =>
-                await CommonTaskDialogs.ShowDialog("Hello world!", "Hello from Addon!");
+                await CommonTaskDialogs.ShowDialog("提示信息", "插件已经初始化完成");
         }
     }
     public static class PathManager
