@@ -13,7 +13,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("ClassIslandCLI")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+40152030a31ae1319e8867ff8ea2caf0c68249b8")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+f872dfec2fb2ccfca2001fb35a3f4b0ed4978fe9")]
 [assembly: System.Reflection.AssemblyProductAttribute("ClassIslandCLI")]
 [assembly: System.Reflection.AssemblyTitleAttribute("ClassIslandCLI")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]

@@ -5,24 +5,22 @@ class Program
     static void PrintHelp()
     {
                 Console.WriteLine("ClassIsLand的命令行工具");
+        Console.WriteLine("--SetProfilePath:设置Default.json的位置");
                 Console.WriteLine("--GetSubjects:获取科目信息");
                 Console.WriteLine("--GetTimelayouts:获取时间表信息");
        Console.WriteLine("--GetClassplans:获取课表信息（含科目名称）");
        Console.WriteLine("--AddSubject <名称> <缩写> <是否室外课(true/false)> [教师名称] [可选参数...]");
-        Console.WriteLine("--DeleteTimeLayout <时间表名称>:删除指定名称的时间表");
+       Console.WriteLine("--ChangeClass <课表名称> <第一节> <第二节>:调换指定课表中两节课的顺序");
+       Console.WriteLine("--DeleteTimeLayout <时间表名称>:删除指定名称的时间表");
                 Console.WriteLine("--AddTimeLayout <时间表名称>:添加一个新时间表");
+       Console.WriteLine("--AddLayout <时间表名称> <StartTime> <EndTime> [可选参数...]");
        Console.WriteLine("  可选参数（--key value 形式）：");
-                Console.WriteLine("    --ClassOnNotificationEnabled <true/false>");
-                Console.WriteLine("    --ClassOnPreparingNotificationEnabled <true/false>");
-                Console.WriteLine("    --ClassOffNotificationEnabled <true/false>");
-                Console.WriteLine("    --ClassPreparingDeltaTime <秒数>");
-                Console.WriteLine("    --ClassOnPreparingText <文本>");
-                Console.WriteLine("    --OutdoorClassOnPreparingText <文本>");
-                Console.WriteLine("    --ClassOnPreparingMaskText <文本>");
-                Console.WriteLine("    --OutdoorClassOnPreparingMaskText <文本>");
-                Console.WriteLine("    --ClassOnMaskText <文本>");
-                Console.WriteLine("    --ClassOffMaskText <文本>");
-                Console.WriteLine("    --ClassOffOverlayText <文本>");
+                Console.WriteLine("    --StartSecond <秒数>");
+                Console.WriteLine("    --EndSecond <秒数>");
+                Console.WriteLine("    --TimeType <类型编号>");
+                Console.WriteLine("    --IsHideDefault <true/false>");
+                Console.WriteLine("    --DefaultClassId <GUID>");
+               Console.WriteLine("    --ActionSet <值>");
                 Console.WriteLine("--help:显示帮助");
     }
     static void Main(string[] args)
@@ -101,6 +99,58 @@ class Program
                 ProfileManager.TimeLayoutManager.AddTimeLayout(name);
             }
 
+            if (args[i] == "--AddLayout")
+            {
+                if (i + 3 >= args.Length)
+                {
+                    Console.WriteLine("用法: --AddLayout <时间表名称> <StartTime> <EndTime> [--StartSecond value] [--EndSecond value] [--TimeType value] [--IsHideDefault value] [--DefaultClassId value] [--ActionSet value]");
+                    return;
+                }
+                string timeLayoutName = args[i + 1];
+                string startTime = args[i + 2];
+                string endTime = args[i + 3];
+
+                string startSecond = "";
+                string endSecond = "";
+                int timeType = 0;
+                bool isHideDefault = false;
+                string defaultClassId = "00000000-0000-0000-0000-000000000000";
+               string? actionSet = null;
+
+                for (int j = i + 4; j < args.Length; j++)
+                {
+                    if (!args[j].StartsWith("--")) break;
+                    string key = args[j];
+                    string? val = (j + 1 < args.Length && !args[j + 1].StartsWith("--")) ? args[j + 1] : null;
+
+                    switch (key)
+                    {
+                        case "--StartSecond":
+                            if (val != null) { startSecond = val; j++; }
+                            break;
+                        case "--EndSecond":
+                            if (val != null) { endSecond = val; j++; }
+                            break;
+                        case "--TimeType":
+                            if (val != null && int.TryParse(val, out var tt)) { timeType = tt; j++; }
+                            break;
+                        case "--IsHideDefault":
+                            if (val != null && bool.TryParse(val, out var hd)) { isHideDefault = hd; j++; }
+                            break;
+                        case "--DefaultClassId":
+                           if (val != null) { defaultClassId = val; j++; }
+                           break;
+                       case "--ActionSet":
+                            if (val != null) { actionSet = val; j++; }
+                            break;
+                    }
+                }
+
+                ProfileManager.TimeLayoutManager.AddLayout(timeLayoutName, startTime, endTime,
+                    startSecond, endSecond, timeType, isHideDefault, defaultClassId, actionSet);
+                return;
+            }
+
             if (args[i] == "--DeleteTimeLayout")
             {
                 if (i + 1 >= args.Length)
@@ -117,13 +167,35 @@ class Program
                 ProfileManager.TimeLayoutManager.GetTimelayouts();
             }
 
-            if (args[i] == "--GetClassplans")
+           if (args[i] == "--GetClassplans")
+           {
+               ProfileManager.ClassPlanManager.GetClassplans();
+           }
+
+            if (args[i] == "--ChangeClass")
             {
-                ProfileManager.ClassPlanManager.GetClassplans();
+                if (i + 3 >= args.Length)
+                {
+                    Console.WriteLine("用法: --ChangeClass <课表名称> <第一节> <第二节>");
+                    return;
+                }
+                string planName = args[i + 1];
+                if (!int.TryParse(args[i + 2], out int idxA) || !int.TryParse(args[i + 3], out int idxB))
+                {
+                    Console.WriteLine("错误：课程索引必须为整数");
+                    return;
+                }
+                if (idxA <= 0 || idxB <= 0)
+                {
+                    Console.WriteLine("错误：课程索引必须大于 0（第一节 = 1，第二节 = 2，以此类推）");
+                    return;
+                }
+                ProfileManager.ClassPlanManager.ChangeClass(planName, idxA, idxB);
+                return;
             }
 
-        }
-    }
+       }
+   }
 
     static SubjectAttachedSettings? ParseAttachedSettings(string[] args, int startIndex)
     {
