@@ -14,7 +14,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("ClassIslandCLIAddon")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+f872dfec2fb2ccfca2001fb35a3f4b0ed4978fe9")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+56a48645a4e58101a7c246e5e7f0353585512918")]
 [assembly: System.Reflection.AssemblyProductAttribute("ClassIslandCLIAddon")]
 [assembly: System.Reflection.AssemblyTitleAttribute("ClassIslandCLIAddon")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]

@@ -11,12 +11,15 @@
     </PropertyGroup>
 
     <ItemGroup>
-        <PackageReference Include="ClassIsland.PluginSdk" Version="$(ClassIslandPluginSdkVersion)">
+        <PackageReference Include="ClassIsland.PluginSdk" Version="2.1.0">
             <ExcludeAssets>runtime; native</ExcludeAssets>
         </PackageReference>
     </ItemGroup>
 
     <ItemGroup>
+        <None Update="ExampleSettingsPage.xaml">
+          <Generator>MSBuild:Compile</Generator>
+        </None>
         <None Update="manifest.yml">
             <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
         </None>

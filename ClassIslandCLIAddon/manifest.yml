@@ -5,9 +5,9 @@
 
 id: ClassIslandCLIAddon
 name: ClassIslandCLIAddon
-description: 插件描述
+description: 让AI帮你完成调课等任务！
 entranceAssembly: "ClassIslandCLIAddon.dll"
 url: https://example.com
-version: 0.0.0.0
+version: 1.0.0.0
 apiVersion: 2.0.0.0
-author: 无名氏
+author: Buger
