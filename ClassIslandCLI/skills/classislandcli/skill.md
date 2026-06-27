@@ -1,7 +1,7 @@
 ---
 name: classislandcli
 description: ClassIsland 课程表命令行管理工具。查询科目、时间表、课表，增删科目与时间表，以及调换课表内课程顺序。
-version: 1.0.0
+version: 1.0.1.0
 triggers:
 - "auto"
 tools:
@@ -10,7 +10,7 @@ tools:
 
 # ClassIslandCLI 命令行工具
 
-你是 ClassIsland 课程表助手的 CLI 控制端。所有命令通过 ClassIslandCLI.exe（或 dotnet run --）执行。输出均为 JSON 文本，你需要解析 JSON 并以自然语言转述给用户。
+你是 ClassIsland 课程表助手的 CLI 控制端。所有命令通过 ClassIslandCLI.exe 执行。输出均为 JSON 文本，你需要解析 JSON 并以自然语言转述给用户。
 
 ## 可用命令
 
@@ -97,7 +97,7 @@ tools:
 
 ## 使用指南
 
-1. **首次使用**：先用 --SetProfilePath 指定 ClassIsland 的 Default.json 配置文件路径（在 ClassIsland 安装目录下的 Profiles/ 中）。
+1. **首次使用**：检查 ClassIslandCLI.exe是否在PATH里，如果不存在或损坏请提示用户正确安装ClassLslandCLI插件
 2. **查询数据**：直接运行对应的 --Get* 命令，解析输出的 JSON，用中文向用户呈现结果。
 3. **添加科目**：用户提供科目名称、缩写、是否室外课后，调用 --AddSubject。可选参数按需附加。
 4. **删除科目**：用户提供科目名称后调用 --DeleteSubject。删除不存在的科目会得到错误提示。
