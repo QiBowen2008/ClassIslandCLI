@@ -5,7 +5,7 @@ VisualStudioVersion = 18.7.11919.86
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ClassIslandCLI", "ClassIslandCLI\ClassIslandCLI.csproj", "{A4E08C15-056B-4476-A35C-73CD54B0E076}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Addon", "Addon\Addon.csproj", "{967159ED-A81B-4AA2-B2F8-0BC6097C232F}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ClassIslandCLIAddon", "ClassIslandCLIAddon\ClassIslandCLIAddon.csproj", "{DB085A65-FCCC-8ED2-7C08-65C09A6389D4}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -17,10 +17,10 @@ Global
 		{A4E08C15-056B-4476-A35C-73CD54B0E076}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{A4E08C15-056B-4476-A35C-73CD54B0E076}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{A4E08C15-056B-4476-A35C-73CD54B0E076}.Release|Any CPU.Build.0 = Release|Any CPU
-		{967159ED-A81B-4AA2-B2F8-0BC6097C232F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{967159ED-A81B-4AA2-B2F8-0BC6097C232F}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{967159ED-A81B-4AA2-B2F8-0BC6097C232F}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{967159ED-A81B-4AA2-B2F8-0BC6097C232F}.Release|Any CPU.Build.0 = Release|Any CPU
+		{DB085A65-FCCC-8ED2-7C08-65C09A6389D4}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{DB085A65-FCCC-8ED2-7C08-65C09A6389D4}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{DB085A65-FCCC-8ED2-7C08-65C09A6389D4}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{DB085A65-FCCC-8ED2-7C08-65C09A6389D4}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

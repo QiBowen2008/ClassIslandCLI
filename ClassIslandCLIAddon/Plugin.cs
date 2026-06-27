@@ -9,7 +9,7 @@ using System.IO;
 using System.Reflection;
 using System.Runtime.InteropServices;
 
-namespace Addon
+namespace ClassIslandCLIAddon
 {
     [PluginEntrance]
     public class Plugin : PluginBase
