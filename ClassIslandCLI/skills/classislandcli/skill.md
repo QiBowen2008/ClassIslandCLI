@@ -1,4 +1,4 @@
----
+﻿---
 name: classislandcli
 description: ClassIsland 课程表命令行管理工具。查询科目、时间表、课表，增删科目与时间表，以及调换课表内课程顺序。
 version: 1.0.1.0
@@ -31,7 +31,8 @@ tools:
 | --AddTimeLayout | --AddTimeLayout <时间表名称> | 创建新的空时间表 |
 | --AddLayout | --AddLayout <时间表名称> <StartTime> <EndTime> [可选参数...] | 向指定时间表中添加一个时间块 |
 | --DeleteTimeLayout | --DeleteTimeLayout <时间表名称> | 按名称删除时间表 |
-| --ChangeClass | --ChangeClass <课表名称> <第一节> <第二节> | 调换指定课表中两节课的顺序（1-based 索引） |
+| --PExchangeClass | --PExchangeClass <课表名称> <第一节> <第二节> | 永久调换指定课表中两节课的顺序（1-based 索引） |
+| --TExchangeClass | --TExchangeClass <课表名称> <第一节> <第二节> | 临时调课：创建叠加层副本，调换课程顺序，保留原课表（1-based 索引） |
 
 ### 配置命令
 
@@ -78,7 +79,13 @@ tools:
 | --DefaultClassId | GUID | 默认科目 GUID（默认全零 GUID） |
 | --ActionSet | string | 关联的 ActionSet 值 |
 
-## --ChangeClass 说明
+## --TExchangeClass 说明
+
+临时调课：保留原课表 JSON 结构不变，复制一份相同课表作为叠加层（IsOverlay=true），将副本中的课程按指定顺序调换，Name 改为原名 + "（临时层）"。
+
+与 --PExchangeClass 的区别：--PExchangeClass 直接修改原课表；--TExchangeClass 不修改原课表，而是创建一个临时叠加层。
+
+## --PExchangeClass 说明
 
 - 两个参数均为 **1-based** 索引（第一节 = 1，第二节 = 2，以此类推）。
 - 运行后，指定课表中两节课的 JSON 节点被交换。
@@ -104,4 +111,5 @@ tools:
 5. **查看课表**：--GetClassplans 已自动将科目 ID 替换为可读名称，直接解析 JSON 中每个课表的 Classes 数组，每节课的 Subject 字段就是科目名称。
 6. **查看时间表**：--GetTimelayouts 输出每个时间表的 Layouts 数组，包含 StartTime 和 EndTime。向用户展示时转换为可读的时间格式。
 7. **管理时间表**：用 --AddTimeLayout 创建空时间表，再用 --AddLayout 添加具体的时间块（起止时间、时间类型等）。用 --DeleteTimeLayout 删除整个时间表。
-8. **调换课程**：用户指定课表名称和两个 1-based 的课程索引，调用 --ChangeClass 调换两节课的顺序。
+8. **永久换课**：用户指定课表名称和两个 1-based 的课程索引，调用 --PExchangeClass 直接调换两节课的顺序。
+9. **临时调课**：用户指定课表名称和两个 1-based 的课程索引，调用 --TExchangeClass 创建叠加层副本进行临时调课。

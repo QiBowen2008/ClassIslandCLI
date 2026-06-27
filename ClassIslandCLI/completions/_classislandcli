@@ -1,0 +1,71 @@
+#compdef classislandcli
+
+# ClassIslandCLI zsh 补全
+# 将此文件放置到 $fpath 中的任意目录（如 ~/.zsh/completions/）并重命名为 _classislandcli
+# 或使用 --InstallCompletions 自动安装
+
+local -a top_commands
+top_commands=(
+    '(-h --help)'{-h,--help}'[显示帮助]'
+    '(-v --version)'{-v,--version}'[显示版本]'
+    '--SetProfilePath[设置 Default.json 路径]:文件路径:_files'
+    '--SetSettingsfilePath[设置 Settings.json 路径]:文件路径:_files'
+    '--GetSubjects[获取科目信息]'
+    '--GetTimelayouts[获取时间表信息]'
+    '--GetClassplans[获取课表信息（含科目名称）]'
+    '--AddSubject[添加新科目]: :->addsubject-args'
+    '--DeleteSubject[删除科目]:科目名称:'
+    '--AddTimeLayout[添加新时间表]:时间表名称:'
+    '--AddLayout[向时间表添加时间段]: :->addlayout-args'
+    '--DeleteTimeLayout[删除时间表]:时间表名称:'
+    '--PExchangeClass[永久调课：直接交换两节课]: :->exchange-args'
+    '--TExchangeClass[临时调课：创建叠加层副本交换课程]: :->exchange-args'
+    '--InstallCompletions[安装 Shell 补全]'
+)
+
+local -a optional_opts
+optional_opts=(
+    '--StartSecond[秒数]:秒数:'
+    '--EndSecond[秒数]:秒数:'
+    '--TimeType[类型编号]:编号:'
+    '--IsHideDefault[是否隐藏默认]:布尔:(true false)'
+    '--DefaultClassId[科目 GUID]:GUID:'
+    '--ActionSet[动作集名称]:动作集:'
+    '--ClassOnNotificationEnabled[上课通知启用]:布尔:(true false)'
+    '--ClassOnPreparingNotificationEnabled[预备通知启用]:布尔:(true false)'
+    '--ClassOffNotificationEnabled[下课通知启用]:布尔:(true false)'
+    '--ClassOnMaskText[上课遮罩文本]:文本:'
+    '--ClassOnPreparingMaskText[预备遮罩文本]:文本:'
+    '--ClassOffMaskText[下课遮罩文本]:文本:'
+    '--ClassOnPreparingText[预备文本]:文本:'
+    '--ClassOffOverlayText[下课叠加文本]:文本:'
+    '--OutdoorClassOnPreparingText[室外课预备文本]:文本:'
+    '--OutdoorClassOnPreparingMaskText[室外课预备遮罩文本]:文本:'
+    '--ClassPreparingDeltaTime[预备提前秒数]:秒数:'
+)
+
+_arguments -C $top_commands && return
+
+case $state in
+    addsubject-args)
+        _arguments \
+            '1: :_message "科目名称"' \
+            '2: :_message "缩写"' \
+            '3: :(true false)' \
+            '4: :_message "教师名称（可选）"' \
+            $optional_opts
+        ;;
+    addlayout-args)
+        _arguments \
+            '1: :_message "时间表名称"' \
+            '2: :_message "开始时间 (HH:mm:ss)"' \
+            '3: :_message "结束时间 (HH:mm:ss)"' \
+            $optional_opts
+        ;;
+    exchange-args)
+        _arguments \
+            '1: :_message "课表名称"' \
+            '2: :_message "第一节 (1-based 索引)"' \
+            '3: :_message "第二节 (1-based 索引)"'
+        ;;
+esac

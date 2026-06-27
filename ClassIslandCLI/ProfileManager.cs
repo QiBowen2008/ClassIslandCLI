@@ -1,4 +1,4 @@
-using System.Text.Json;
+﻿using System.Text.Json;
 using System.Text.Json.Nodes;
 
 namespace ClassIslandCLI;
@@ -305,7 +305,7 @@ public static class ProfileManager
         /// <summary>
         /// 调换指定课表中两个课程的位置。
         /// </summary>
-        public static void ChangeClass(string planName, int indexA, int indexB)
+        public static void PExchangeClass(string planName, int indexA, int indexB)
         {
             var classPlans = root["ClassPlans"] as JsonObject;
             if (classPlans == null)
@@ -372,6 +372,86 @@ public static class ProfileManager
 
             SaveProfile();
             Console.WriteLine($"""已将课表 "{planName}" 的第 {indexA} 节课与第 {indexB} 节课进行调换""");
+        }
+        
+        /// <summary>
+        /// 临时调课：保留原课表不变，复制一份新课表作为叠加层，并交换课程顺序。
+        /// </summary>
+        public static void TExchangeClass(string planName, int indexA, int indexB)
+        {
+            var classPlans = root["ClassPlans"] as JsonObject;
+            if (classPlans == null)
+            {
+                Console.WriteLine("错误：无法找到 ClassPlans 节点");
+                return;
+            }
+
+            // 查找指定名称的课表
+            JsonObject? targetPlan = null;
+            foreach (var plan in classPlans)
+            {
+                var planObj = plan.Value as JsonObject;
+                if (planObj != null && planObj["Name"]?.GetValue<string>() == planName)
+                {
+                    targetPlan = planObj;
+                    break;
+                }
+            }
+
+            if (targetPlan == null)
+            {
+                Console.WriteLine($"""错误：未找到名称为 "{planName}" 的课表""");
+                return;
+            }
+
+            var classes = targetPlan["Classes"] as JsonArray;
+            if (classes == null || classes.Count == 0)
+            {
+                Console.WriteLine($"""错误：课表 "{planName}" 中没有课程""");
+                return;
+            }
+
+            int idxA = indexA - 1;
+            int idxB = indexB - 1;
+
+            if (idxA < 0 || idxA >= classes.Count)
+            {
+                Console.WriteLine($"""错误：课程索引 {indexA} 超出范围（课表 "{planName}" 共有 {classes.Count} 节课）""");
+                return;
+            }
+            if (idxB < 0 || idxB >= classes.Count)
+            {
+                Console.WriteLine($"""错误：课程索引 {indexB} 超出范围（课表 "{planName}" 共有 {classes.Count} 节课）""");
+                return;
+            }
+
+            // 深拷贝原课表
+            var clonedPlan = JsonNode.Parse(targetPlan.ToJsonString())!.AsObject();
+
+            // 在副本中交换课程
+            var clonedClasses = clonedPlan["Classes"]!.AsArray();
+            var jsonA = clonedClasses[idxA].ToJsonString();
+            var jsonB = clonedClasses[idxB].ToJsonString();
+            int removeFirst = Math.Max(idxA, idxB);
+            int removeSecond = Math.Min(idxA, idxB);
+            clonedClasses.RemoveAt(removeFirst);
+            var nodeRemoved = JsonNode.Parse(removeFirst == idxA ? jsonA : jsonB)!;
+            clonedClasses.RemoveAt(removeSecond);
+            var nodeInserted = JsonNode.Parse(removeSecond == idxA ? jsonA : jsonB)!;
+            clonedClasses.Insert(removeSecond, nodeRemoved);
+            clonedClasses.Insert(removeFirst, nodeInserted);
+
+            // 重命名
+            clonedPlan["Name"] = planName + "（临时层）";
+            // 设为叠加层
+            clonedPlan["IsOverlay"] = true;
+
+            // 生成新 key 并加入 ClassPlans
+            string newKey = Guid.NewGuid().ToString();
+            classPlans[newKey] = clonedPlan;
+
+            SaveProfile();
+            Console.WriteLine($"""已为课表 "{planName}" 创建临时调课叠加层，第 {indexA} 节课与第 {indexB} 节课已调换""");
         }
     }
 

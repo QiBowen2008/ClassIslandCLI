@@ -1,4 +1,4 @@
-namespace ClassIslandCLI;
+﻿namespace ClassIslandCLI;
 
 class Program
 {
@@ -10,7 +10,8 @@ class Program
                 Console.WriteLine("--GetTimelayouts:获取时间表信息");
        Console.WriteLine("--GetClassplans:获取课表信息（含科目名称）");
        Console.WriteLine("--AddSubject <名称> <缩写> <是否室外课(true/false)> [教师名称] [可选参数...]");
-       Console.WriteLine("--ChangeClass <课表名称> <第一节> <第二节>:调换指定课表中两节课的顺序");
+       Console.WriteLine("--PExchangeClass <课表名称> <第一节> <第二节>:永久调换指定课表中两节课的顺序");
+       Console.WriteLine("--TExchangeClass <课表名称> <第一节> <第二节>:临时调课（创建叠加层，保留原课表）");
        Console.WriteLine("--DeleteTimeLayout <时间表名称>:删除指定名称的时间表");
                 Console.WriteLine("--AddTimeLayout <时间表名称>:添加一个新时间表");
        Console.WriteLine("--AddLayout <时间表名称> <StartTime> <EndTime> [可选参数...]");
@@ -21,10 +22,12 @@ class Program
                 Console.WriteLine("    --IsHideDefault <true/false>");
                 Console.WriteLine("    --DefaultClassId <GUID>");
                Console.WriteLine("    --ActionSet <值>");
+               Console.WriteLine("--InstallCompletions:安装 Shell 补全文件");
                 Console.WriteLine("--help:显示帮助");
     }
     static void Main(string[] args)
     {
+        CompletionsInstaller.EnsureInstalled();
         if (args.Length == 0)
             {
                 PrintHelp();
@@ -172,11 +175,11 @@ class Program
                ProfileManager.ClassPlanManager.GetClassplans();
            }
 
-            if (args[i] == "--ChangeClass")
+            if (args[i] == "--PExchangeClass")
             {
                 if (i + 3 >= args.Length)
                 {
-                    Console.WriteLine("用法: --ChangeClass <课表名称> <第一节> <第二节>");
+                    Console.WriteLine("用法: --PExchangeClass <课表名称> <第一节> <第二节>");
                     return;
                 }
                 string planName = args[i + 1];
@@ -190,7 +193,35 @@ class Program
                     Console.WriteLine("错误：课程索引必须大于 0（第一节 = 1，第二节 = 2，以此类推）");
                     return;
                 }
-                ProfileManager.ClassPlanManager.ChangeClass(planName, idxA, idxB);
+                ProfileManager.ClassPlanManager.PExchangeClass(planName, idxA, idxB);
+                return;
+            }
+
+            if (args[i] == "--TExchangeClass")
+            {
+                if (i + 3 >= args.Length)
+                {
+                    Console.WriteLine("用法: --TExchangeClass <课表名称> <第一节> <第二节>");
+                    return;
+                }
+                string planName = args[i + 1];
+                if (!int.TryParse(args[i + 2], out int idxA) || !int.TryParse(args[i + 3], out int idxB))
+                {
+                    Console.WriteLine("错误：课程索引必须为整数");
+                    return;
+                }
+                if (idxA <= 0 || idxB <= 0)
+                {
+                    Console.WriteLine("错误：课程索引必须大于 0（第一节 = 1，第二节 = 2，以此类推）");
+                    return;
+                }
+                ProfileManager.ClassPlanManager.TExchangeClass(planName, idxA, idxB);
+                return;
+            }
+
+            if (args[i] == "--InstallCompletions")
+            {
+                CompletionsInstaller.Install();
                 return;
             }
 
