@@ -7,6 +7,7 @@ using Microsoft.Extensions.Hosting;
 using System;
 using System.IO;
 using System.Reflection;
+using System.Text.Json.Nodes;
 using System.Runtime.InteropServices;
 
 namespace ClassIslandCLIAddon
@@ -16,8 +17,14 @@ namespace ClassIslandCLIAddon
     {
         public override void Initialize(HostBuilderContext context, IServiceCollection services)
         {
-            string libraryDirectory = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
-            PathManager.AddToUserPath (libraryDirectory);   
+            string libraryDirectory0 = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
+            string libraryDirectory = Path.GetDirectoryName(libraryDirectory0);
+            PathManager.AddToUserPath (libraryDirectory);
+            string json = File.ReadAllText(libraryDirectory0 + "/Config.json");
+            JsonNode? root = JsonNode.Parse (json);
+            root["ClassIslandPath"] = libraryDirectory;
+            string newjson = root.ToJsonString();
+            File.WriteAllText(libraryDirectory0 + "/Config.json", newjson);
             AppBase.Current.AppStarted += async (_, _) =>
                 await CommonTaskDialogs.ShowDialog("提示信息", "插件已经初始化完成");
         }

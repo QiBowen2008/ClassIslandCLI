@@ -1,25 +1,27 @@
 {
   "format": 1,
   "restore": {
-    "/mnt/d/MyFiles/ClassIslandCLI/ClassIslandCLI/ClassIslandCLI.csproj": {}
+    "D:\\MyFiles\\ClassIslandCLI\\ClassIslandCLI\\ClassIslandCLI.csproj": {}
   },
   "projects": {
-    "/mnt/d/MyFiles/ClassIslandCLI/ClassIslandCLI/ClassIslandCLI.csproj": {
+    "D:\\MyFiles\\ClassIslandCLI\\ClassIslandCLI\\ClassIslandCLI.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "/mnt/d/MyFiles/ClassIslandCLI/ClassIslandCLI/ClassIslandCLI.csproj",
+        "projectUniqueName": "D:\\MyFiles\\ClassIslandCLI\\ClassIslandCLI\\ClassIslandCLI.csproj",
         "projectName": "ClassIslandCLI",
-        "projectPath": "/mnt/d/MyFiles/ClassIslandCLI/ClassIslandCLI/ClassIslandCLI.csproj",
-        "packagesPath": "/home/buger/.nuget/packages/",
-        "outputPath": "/mnt/d/MyFiles/ClassIslandCLI/ClassIslandCLI/obj/",
+        "projectPath": "D:\\MyFiles\\ClassIslandCLI\\ClassIslandCLI\\ClassIslandCLI.csproj",
+        "packagesPath": "C:\\Users\\lenovo\\.nuget\\packages\\",
+        "outputPath": "D:\\MyFiles\\ClassIslandCLI\\ClassIslandCLI\\obj\\",
         "projectStyle": "PackageReference",
         "configFilePaths": [
-          "/home/buger/.nuget/NuGet/NuGet.Config"
+          "C:\\Users\\lenovo\\AppData\\Roaming\\NuGet\\NuGet.Config",
+          "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
         ],
         "originalTargetFrameworks": [
           "net10.0"
         ],
         "sources": {
+          "C:\\Program Files (x86)\\Microsoft SDKs\\NuGetPackages\\": {},
           "https://api.nuget.org/v3/index.json": {}
         },
         "frameworks": {
@@ -72,19 +74,23 @@
           "warn": true,
           "downloadDependencies": [
             {
-              "name": "Microsoft.AspNetCore.App.Runtime.linux-x64",
+              "name": "Microsoft.AspNetCore.App.Runtime.win-x64",
               "version": "[10.0.9, 10.0.9]"
             },
             {
-              "name": "Microsoft.NETCore.App.Runtime.linux-x64",
+              "name": "Microsoft.NETCore.App.Runtime.NativeAOT.win-x64",
               "version": "[10.0.9, 10.0.9]"
             },
             {
-              "name": "Microsoft.NETCore.App.Runtime.NativeAOT.linux-x64",
+              "name": "Microsoft.NETCore.App.Runtime.win-x64",
               "version": "[10.0.9, 10.0.9]"
             },
             {
-              "name": "runtime.linux-x64.Microsoft.DotNet.ILCompiler",
+              "name": "Microsoft.WindowsDesktop.App.Runtime.win-x64",
+              "version": "[10.0.9, 10.0.9]"
+            },
+            {
+              "name": "runtime.win-x64.Microsoft.DotNet.ILCompiler",
               "version": "[10.0.9, 10.0.9]"
             }
           ],
@@ -93,7 +99,7 @@
               "privateAssets": "all"
             }
           },
-          "runtimeIdentifierGraphPath": "/home/buger/.dotnet/sdk/10.0.301/PortableRuntimeIdentifierGraph.json",
+          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\10.0.301/PortableRuntimeIdentifierGraph.json",
           "packagesToPrune": {
             "Microsoft.CSharp": "(,4.7.32767]",
             "Microsoft.VisualBasic": "(,10.4.32767]",
@@ -371,7 +377,7 @@
         }
       },
       "runtimes": {
-        "linux-x64": {
+        "win-x64": {
           "#import": []
         }
       }

@@ -9,7 +9,7 @@ class Program
                 Console.WriteLine("--GetSubjects:获取科目信息");
                 Console.WriteLine("--GetTimelayouts:获取时间表信息");
        Console.WriteLine("--GetClassplans:获取课表信息（含科目名称）");
-       Console.WriteLine("--AddSubject <名称> <缩写> <是否室外课(true/false)> [教师名称] [可选参数...]");
+        Console.WriteLine("--AddSubject <名称> [缩写] [是否室外课(true/false)] [教师名称] ");
        Console.WriteLine("--PExchangeClass <课表名称> <第一节> <第二节>:永久调换指定课表中两节课的顺序");
        Console.WriteLine("--TExchangeClass <课表名称> <第一节> <第二节>:临时调课（创建叠加层，保留原课表）");
        Console.WriteLine("--DeleteTimeLayout <时间表名称>:删除指定名称的时间表");
@@ -27,6 +27,9 @@ class Program
     }
     static void Main(string[] args)
     {
+        // 启动时先核验 Config.json 中的路径配置是否有效
+        ConfigValidator.Validate();
+ 
         CompletionsInstaller.EnsureInstalled();
         if (args.Length == 0)
             {
@@ -45,9 +48,9 @@ class Program
                 Console.WriteLine("版本号1.0");
             }
 
-            if (args[i] == "--SetSettingsfilePath")
+           if (args[i] == "--SetClassIslandPath")
             {
-                SetConfig.SetSettingsfilePath(args[i + 1]);
+               SetConfig.SetClassIslandPath(args[i + 1]);
             }
             if (args[i] == "--SetProfilePath")
             {
@@ -56,19 +59,44 @@ class Program
 
             if (args[i] == "--AddSubject")
             {
-                if (i + 3 >= args.Length)
+                if (i + 1 >= args.Length)
                 {
-                    Console.WriteLine("用法: --AddSubject <名称> <缩写> <是否室外课(true/false)> [教师名称] [可选参数...]");
+                    Console.WriteLine("用法: --AddSubject <名称> [缩写] [是否室外课(true/false)] [教师名称] [可选参数...]");
                     return;
                 }
-
+ 
                 string name = args[i + 1];
-                string initial = args[i + 2];
-                bool isOutDoor = bool.TryParse(args[i + 3], out var b) && b;
-                string teacherName = (i + 4 < args.Length && !args[i + 4].StartsWith("--")) ? args[i + 4] : "";
-
+                string initial = name.Substring(0, 1);    // 默认：课程名称的第一个字
+                bool isOutDoor = false;                   // 默认：非室外课
+                string teacherName = "";
+ 
+                int optPos = i + 2;
+ 
+                // 检查是否提供了缩写（非 "true"/"false" 且不以 "--" 开头即为缩写）
+                if (optPos < args.Length && !args[optPos].StartsWith("--") &&
+                    args[optPos] != "true" && args[optPos] != "false")
+                {
+                    initial = args[optPos];
+                    optPos++;
+                }
+ 
+                // 检查是否提供了是否为室外课
+                if (optPos < args.Length && !args[optPos].StartsWith("--") &&
+                    (args[optPos] == "true" || args[optPos] == "false"))
+                {
+                    isOutDoor = bool.Parse(args[optPos]);
+                    optPos++;
+                }
+ 
+                // 检查是否提供了教师名称
+                if (optPos < args.Length && !args[optPos].StartsWith("--"))
+                {
+                    teacherName = args[optPos];
+                    optPos++;
+                }
+ 
                 // 解析可选命名参数
-                var settings = ParseAttachedSettings(args, i + (string.IsNullOrEmpty(teacherName) ? 4 : 5));
+                var settings = ParseAttachedSettings(args, optPos);
 
                 var info = new SubjectInfo(name, isOutDoor, initial, teacherName, settings);
                 ProfileManager.SubjectManager.AddSubject(info);

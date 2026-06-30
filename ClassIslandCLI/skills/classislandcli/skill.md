@@ -1,7 +1,7 @@
-﻿---
+---
 name: classislandcli
 description: ClassIsland 课程表命令行管理工具。查询科目、时间表、课表，增删科目与时间表，以及调换课表内课程顺序。
-version: 1.0.1.0
+version: 1.0.2.0
 triggers:
 - "auto"
 tools:
@@ -26,7 +26,7 @@ tools:
 
 | 命令 | 用法 | 说明 |
 |---|---|---|
-| --AddSubject | --AddSubject <名称> <缩写> <是否室外课(true/false)> [教师名称] [可选参数...] | 添加新科目 |
+| --AddSubject | --AddSubject <名称> [缩写] [是否室外课(true/false)] [教师名称] [可选参数...] | 添加新科目。缩写和是否室外课为可选参数，详见下方说明 |
 | --DeleteSubject | --DeleteSubject <科目名称> | 按名称删除科目 |
 | --AddTimeLayout | --AddTimeLayout <时间表名称> | 创建新的空时间表 |
 | --AddLayout | --AddLayout <时间表名称> <StartTime> <EndTime> [可选参数...] | 向指定时间表中添加一个时间块 |
@@ -48,7 +48,27 @@ tools:
 | --help / -h | 显示帮助信息 |
 | --version / -v | 显示版本号 |
 
-## --AddSubject 可选参数
+## --AddSubject 参数说明
+
+`--AddSubject` 的`缩写`和`是否室外课`为可选参数，工具会自动从左到右按顺序识别：
+
+- **缩写**：默认值为课程名称的第一个字。如果第二个参数不是 `true`/`false` 且不以 `--` 开头，则视为缩写。
+- **是否室外课**：默认值为 `false`。下一个参数如果是 `true`/`false`，则视为室外课标记。
+- **教师名称**：可选。上述参数之后的下一个非 `--` 参数被视为教师名称。
+
+**使用示例：**
+
+```
+--AddSubject "数学"               # 缩写="数", 室外课=false
+--AddSubject "数学" "sx"          # 缩写="sx", 室外课=false
+--AddSubject "数学" "sx" true     # 缩写="sx", 室外课=true
+--AddSubject "数学" true          # 缩写="数", 室外课=true
+--AddSubject "数学" true "张老师" # 缩写="数", 室外课=true, 教师="张老师"
+```
+
+之后仍可附加下方通知设置参数。
+
+## --AddSubject 可选参数（通知设置）
 
 以下参数以 --key value 形式跟在基本参数之后，用于配置科目的上课/下课提醒通知：
 
@@ -104,9 +124,9 @@ tools:
 
 ## 使用指南
 
-1. **首次使用**：检查 ClassIslandCLI.exe是否在PATH里，如果不存在或损坏请提示用户正确安装ClassLslandCLI插件
+1. **首次使用**：检查 ClassIslandCLI.exe是否在PATH里，如果不存在或损坏请提示用户去ClassIsland安装插件
 2. **查询数据**：直接运行对应的 --Get* 命令，解析输出的 JSON，用中文向用户呈现结果。
-3. **添加科目**：用户提供科目名称、缩写、是否室外课后，调用 --AddSubject。可选参数按需附加。
+3. **添加科目**：用户提供科目名称后调用 --AddSubject。缩写默认取名称首字，室外课默认 false，均可按需提供。可选通知参数按需附加。
 4. **删除科目**：用户提供科目名称后调用 --DeleteSubject。删除不存在的科目会得到错误提示。
 5. **查看课表**：--GetClassplans 已自动将科目 ID 替换为可读名称，直接解析 JSON 中每个课表的 Classes 数组，每节课的 Subject 字段就是科目名称。
 6. **查看时间表**：--GetTimelayouts 输出每个时间表的 Layouts 数组，包含 StartTime 和 EndTime。向用户展示时转换为可读的时间格式。

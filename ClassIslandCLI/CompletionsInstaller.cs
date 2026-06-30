@@ -1,3 +1,4 @@
+//此文件为AI生成，不能保证补全脚本能够正确添加，尤其是Mac，这个平台我目前无法测试
 using Microsoft.Win32;
 using System.Runtime.InteropServices;
 
@@ -42,7 +43,7 @@ Register-ArgumentCompleter -CommandName classislandcli, ClassIslandCLI, dotnet -
         '--help', '-h',
         '--version', '-v',
         '--SetProfilePath',
-        '--SetSettingsfilePath',
+        '--SetClassIslandPath',
         '--GetSubjects',
         '--GetTimelayouts',
         '--GetClassplans',
@@ -90,7 +91,7 @@ Register-ArgumentCompleter -CommandName classislandcli, ClassIslandCLI, dotnet -
         '--SetProfilePath' {
             if ($posArgCount -eq 0) { return @() }
         }
-        '--SetSettingsfilePath' {
+        '--SetClassIslandPath' {
             if ($posArgCount -eq 0) { return @() }
         }
         '--AddSubject' {
@@ -144,7 +145,7 @@ Register-ArgumentCompleter -CommandName classislandcli, ClassIslandCLI, dotnet -
 complete -c ClassIslandCLI -s h -l help        -d ""显示帮助""
 complete -c ClassIslandCLI -s v -l version     -d ""显示版本""
 complete -c ClassIslandCLI -l SetProfilePath    -d ""设置 Default.json 路径""          -x -a ""(__fish_complete_path)""
-complete -c ClassIslandCLI -l SetSettingsfilePath -d ""设置 Settings.json 路径""       -x -a ""(__fish_complete_path)""
+complete -c ClassIslandCLI -l SetClassIslandPath -d ""设置 ClassIsland 路径""       -x -a ""(__fish_complete_path)""
 complete -c ClassIslandCLI -l GetSubjects       -d ""获取科目信息""
 complete -c ClassIslandCLI -l GetTimelayouts    -d ""获取时间表信息""
 complete -c ClassIslandCLI -l GetClassplans     -d ""获取课表信息（含科目名称）""
@@ -194,7 +195,7 @@ top_commands=(
     '(-h --help)'{-h,--help}'[显示帮助]'
     '(-v --version)'{-v,--version}'[显示版本]'
     '--SetProfilePath[设置 Default.json 路径]:文件路径:_files'
-    '--SetSettingsfilePath[设置 Settings.json 路径]:文件路径:_files'
+    '--SetClassIslandPath[设置 ClassIsland 路径]:文件路径:_files'
     '--GetSubjects[获取科目信息]'
     '--GetTimelayouts[获取时间表信息]'
     '--GetClassplans[获取课表信息（含科目名称）]'

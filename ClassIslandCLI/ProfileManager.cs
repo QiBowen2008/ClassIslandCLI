@@ -42,6 +42,7 @@ public static class ProfileManager
         var options = new JsonSerializerOptions { WriteIndented = false };
         File.WriteAllText(profilePath, root.ToJsonString(options));
         File.Copy(profilePath, profilePath + ".bak", true);
+        Restarter.Restart();
     }
 
     public static class TimeLayoutManager
@@ -162,7 +163,7 @@ public static class ProfileManager
                 targetLayout["Layouts"] = layouts;
             }
 
-            layouts.Add(newLayout);
+            layouts.Add((JsonNode)newLayout);
             SaveProfile();
             Console.WriteLine($"""已向时间表 "{timeLayoutName}" 添加布局：{startTime} - {endTime}（第 {layouts.Count} 个布局）""");
         }
