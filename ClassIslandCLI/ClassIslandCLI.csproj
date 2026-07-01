@@ -19,12 +19,18 @@
     <AssemblyVersion>1.0.1.0</AssemblyVersion>
     <FileVersion>1.0.1.0</FileVersion>
 </PropertyGroup>
+<ItemGroup>
+  <PackageReference Include="CopyDirectory" Version="1.0.3" />
+</ItemGroup>
     <ItemGroup>
       <None Update="Config.json">
         <CopyToOutputDirectory>Always</CopyToOutputDirectory>
       </None>
       <None Update="Default.json">
         <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      </None>
+      <None Update="skills\classislandcli\skill.md">
+        <CopyToOutputDirectory>Always</CopyToOutputDirectory>
       </None>
     </ItemGroup>
 

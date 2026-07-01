@@ -1,10 +1,10 @@
-﻿using System.Text.Json;
+using System.Text.Json;
 using System.Text.Json.Nodes;
 
 namespace ClassIslandCLI;
 
 /// <summary>
-/// --AddSubject 可选参数：对应 Subjects[].AttachedObjects 中的通知设置
+/// --SetSubject 可选参数：对应 Subjects[].AttachedObjects 中的通知设置
 /// </summary>
 public record SubjectAttachedSettings(
     bool? IsClassOnNotificationEnabled = null,
@@ -317,12 +317,14 @@ public static class ProfileManager
 
             // 查找指定名称的课表
             JsonObject? targetPlan = null;
+            string? sourceKey = null;
             foreach (var plan in classPlans)
             {
                 var planObj = plan.Value as JsonObject;
                 if (planObj != null && planObj["Name"]?.GetValue<string>() == planName)
                 {
                     targetPlan = planObj;
+                    sourceKey = plan.Key;
                     break;
                 }
             }
@@ -389,14 +391,16 @@ public static class ProfileManager
 
             // 查找指定名称的课表
             JsonObject? targetPlan = null;
+            string? sourceKey = null;
             foreach (var plan in classPlans)
             {
                 var planObj = plan.Value as JsonObject;
-                if (planObj != null && planObj["Name"]?.GetValue<string>() == planName)
-                {
-                    targetPlan = planObj;
-                    break;
-                }
+                    if (planObj != null && planObj["Name"]?.GetValue<string>() == planName)
+                    {
+                        targetPlan = planObj;
+                        sourceKey = plan.Key;
+                        break;
+                    }
             }
 
             if (targetPlan == null)
@@ -451,6 +455,31 @@ public static class ProfileManager
             string newKey = Guid.NewGuid().ToString();
             classPlans[newKey] = clonedPlan;
 
+            // 设置叠加层关联属性
+            clonedPlan["OverlaySourceId"] = sourceKey;
+            root["IsOverlayClassPlanEnabled"] = true;
+            root["OverlayClassPlanId"] = newKey;
+
+            // 生成 OverlaySetupTime 为今天日期 00:00:00 当地时间
+            var now = DateTime.Now;
+            var localOffset = TimeZoneInfo.Local.GetUtcOffset(now);
+            var setupTime = new DateTimeOffset(now.Year, now.Month, now.Day, 0, 0, 0, localOffset);
+            string setupTimeStr = setupTime.ToString("yyyy-MM-ddTHH:mm:sszzz");
+            clonedPlan["OverlaySetupTime"] = setupTimeStr;
+
+            // 在 OrderedSchedules 中添加调度项
+            var orderedSchedules = root["OrderedSchedules"] as JsonObject;
+            if (orderedSchedules == null)
+            {
+                orderedSchedules = new JsonObject();
+                root["OrderedSchedules"] = orderedSchedules;
+            }
+            orderedSchedules[setupTimeStr] = new JsonObject
+            {
+                ["ClassPlanId"] = newKey,
+                ["IsActive"] = false
+            };
+
             SaveProfile();
             Console.WriteLine($"""已为课表 "{planName}" 创建临时调课叠加层，第 {indexA} 节课与第 {indexB} 节课已调换""");
         }
@@ -459,9 +488,9 @@ public static class ProfileManager
     public static class SubjectManager
     {
         /// <summary>
-        /// 添加一个新科目到配置中。
+        /// 设置科目：同名则覆盖（保留原 UUID），否则新增。
         /// </summary>
-        public static void AddSubject(SubjectInfo info)
+        public static void SetSubject(SubjectInfo info)
         {
             var subjects = root["Subjects"] as JsonObject;
             if (subjects == null)
@@ -469,8 +498,6 @@ public static class ProfileManager
                 Console.WriteLine("错误：无法找到 Subjects 节点");
                 return;
             }
-
-            string id = Guid.NewGuid().ToString();
 
             var attachedObj = new JsonObject();
 
@@ -510,19 +537,51 @@ public static class ProfileManager
                 attachedObj[innerId] = inner;
             }
 
-            var newSubject = new JsonObject
+            // 查找是否已存在同名科目
+            string? existingKey = null;
+            foreach (var subject in subjects)
             {
-                ["Name"] = info.Name,
-                ["Initial"] = info.Initial,
-                ["TeacherName"] = info.TeacherName,
-                ["IsOutDoor"] = info.IsOutDoor,
-                ["AttachedObjects"] = attachedObj,
-                ["IsActive"] = false
-            };
+                var subjectObj = subject.Value as JsonObject;
+                if (subjectObj != null && subjectObj["Name"]?.GetValue<string>() == info.Name)
+                {
+                    existingKey = subject.Key;
+                    break;
+                }
+            }
 
-            subjects[id] = newSubject;
-            SaveProfile();
-            Console.WriteLine($"""已添加科目：{info.Name}（ID: {id}）""");
+            if (existingKey != null)
+            {
+                // 同名科目已存在：更新字段，保留原有 key（UUID）
+                var existing = subjects[existingKey] as JsonObject;
+                if (existing != null)
+                {
+                    existing["Name"] = info.Name;
+                    existing["Initial"] = info.Initial;
+                    existing["TeacherName"] = info.TeacherName;
+                    existing["IsOutDoor"] = info.IsOutDoor;
+                    existing["AttachedObjects"] = attachedObj;
+                    existing["IsActive"] = false;
+                }
+                SaveProfile();
+                Console.WriteLine($"""已更新科目：{info.Name}（ID: {existingKey}）""");
+            }
+            else
+            {
+                // 不存在同名科目：新增
+                string id = Guid.NewGuid().ToString();
+                var newSubject = new JsonObject
+                {
+                    ["Name"] = info.Name,
+                    ["Initial"] = info.Initial,
+                    ["TeacherName"] = info.TeacherName,
+                    ["IsOutDoor"] = info.IsOutDoor,
+                    ["AttachedObjects"] = attachedObj,
+                    ["IsActive"] = false
+                };
+                subjects[id] = newSubject;
+                SaveProfile();
+                Console.WriteLine($"""已添加科目：{info.Name}（ID: {id}）""");
+            }
         }
 
         public static void GetSubjects()

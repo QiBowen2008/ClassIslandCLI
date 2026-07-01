@@ -1,4 +1,5 @@
-﻿namespace ClassIslandCLI;
+using CopyDirectory;
+namespace ClassIslandCLI;
 
 class Program
 {
@@ -9,7 +10,7 @@ class Program
                 Console.WriteLine("--GetSubjects:获取科目信息");
                 Console.WriteLine("--GetTimelayouts:获取时间表信息");
        Console.WriteLine("--GetClassplans:获取课表信息（含科目名称）");
-        Console.WriteLine("--AddSubject <名称> [缩写] [是否室外课(true/false)] [教师名称] ");
+        Console.WriteLine("--SetSubject <名称> [缩写] [是否室外课(true/false)] [教师名称] ");
        Console.WriteLine("--PExchangeClass <课表名称> <第一节> <第二节>:永久调换指定课表中两节课的顺序");
        Console.WriteLine("--TExchangeClass <课表名称> <第一节> <第二节>:临时调课（创建叠加层，保留原课表）");
        Console.WriteLine("--DeleteTimeLayout <时间表名称>:删除指定名称的时间表");
@@ -57,11 +58,11 @@ class Program
                 SetConfig.SetProfilePath(args[i + 1]);
             }
 
-            if (args[i] == "--AddSubject")
+            if (args[i] == "--SetSubject")
             {
                 if (i + 1 >= args.Length)
                 {
-                    Console.WriteLine("用法: --AddSubject <名称> [缩写] [是否室外课(true/false)] [教师名称] [可选参数...]");
+                    Console.WriteLine("用法: --SetSubject <名称> [缩写] [是否室外课(true/false)] [教师名称] [可选参数...]");
                     return;
                 }
  
@@ -99,7 +100,7 @@ class Program
                 var settings = ParseAttachedSettings(args, optPos);
 
                 var info = new SubjectInfo(name, isOutDoor, initial, teacherName, settings);
-                ProfileManager.SubjectManager.AddSubject(info);
+                ProfileManager.SubjectManager.SetSubject(info);
                 return;
             }
 
@@ -252,6 +253,17 @@ class Program
                 CompletionsInstaller.Install();
                 return;
             }
+            if (args[i]== "--InstallSkills")
+            {
+                try
+                {
+                    IO.CopyDirectory("./skills/classislandcli", Environment.GetFolderPath(Environment.SpecialFolder.UserProfile) + "/.openclaw/skills/classislandcli");
+                }
+                catch
+                {
+                    Console.WriteLine("安装skills失败，请手动安装skills");
+                }
+            } 
 
        }
    }

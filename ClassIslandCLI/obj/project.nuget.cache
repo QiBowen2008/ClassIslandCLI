@@ -1,9 +1,10 @@
 {
   "version": 2,
-  "dgSpecHash": "6bGSSm2RgAw=",
+  "dgSpecHash": "uH32Ty/Zt7Q=",
   "success": true,
   "projectFilePath": "D:\\MyFiles\\ClassIslandCLI\\ClassIslandCLI\\ClassIslandCLI.csproj",
   "expectedPackageFiles": [
+    "C:\\Users\\lenovo\\.nuget\\packages\\copydirectory\\1.0.3\\copydirectory.1.0.3.nupkg.sha512",
     "C:\\Users\\lenovo\\.nuget\\packages\\microsoft.dotnet.ilcompiler\\10.0.9\\microsoft.dotnet.ilcompiler.10.0.9.nupkg.sha512",
     "C:\\Users\\lenovo\\.nuget\\packages\\microsoft.net.illink.tasks\\10.0.9\\microsoft.net.illink.tasks.10.0.9.nupkg.sha512",
     "C:\\Users\\lenovo\\.nuget\\packages\\runtime.win-x64.microsoft.dotnet.ilcompiler\\10.0.9\\runtime.win-x64.microsoft.dotnet.ilcompiler.10.0.9.nupkg.sha512",

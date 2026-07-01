@@ -2,6 +2,15 @@
   "version": 4,
   "targets": {
     "net10.0": {
+      "CopyDirectory/1.0.3": {
+        "type": "package",
+        "compile": {
+          "lib/netstandard2.0/CopyDirectory.dll": {}
+        },
+        "runtime": {
+          "lib/netstandard2.0/CopyDirectory.dll": {}
+        }
+      },
       "Microsoft.DotNet.ILCompiler/10.0.9": {
         "type": "package",
         "build": {
@@ -16,6 +25,15 @@
       }
     },
     "net10.0/win-x64": {
+      "CopyDirectory/1.0.3": {
+        "type": "package",
+        "compile": {
+          "lib/netstandard2.0/CopyDirectory.dll": {}
+        },
+        "runtime": {
+          "lib/netstandard2.0/CopyDirectory.dll": {}
+        }
+      },
       "Microsoft.DotNet.ILCompiler/10.0.9": {
         "type": "package",
         "dependencies": {
@@ -37,6 +55,20 @@
     }
   },
   "libraries": {
+    "CopyDirectory/1.0.3": {
+      "sha512": "A3bnYgiJv7QALDZbGWBN2jSPcaBFoxaH0nATMJgwpGoVdmt7VePQl4k6sVj30HqWeNlectX2QLx6QBoR9cdkkA==",
+      "type": "package",
+      "path": "copydirectory/1.0.3",
+      "files": [
+        ".nupkg.metadata",
+        ".signature.p7s",
+        "CopyDirectory.png",
+        "README.md",
+        "copydirectory.1.0.3.nupkg.sha512",
+        "copydirectory.nuspec",
+        "lib/netstandard2.0/CopyDirectory.dll"
+      ]
+    },
     "Microsoft.DotNet.ILCompiler/10.0.9": {
       "sha512": "4y+VsQOcs4EiTSINdCpCWi/aLRbIbGTxSezQXd8uGVhzbDRm1FNVTZDyCUQixE0+g9UFusvfxVcF68YYz7RzxA==",
       "type": "package",
@@ -139,6 +171,7 @@
   },
   "projectFileDependencyGroups": {
     "net10.0": [
+      "CopyDirectory >= 1.0.3",
       "Microsoft.DotNet.ILCompiler >= 10.0.9",
       "Microsoft.NET.ILLink.Tasks >= 10.0.9"
     ]
@@ -190,6 +223,10 @@
         "framework": "net10.0",
         "targetAlias": "net10.0",
         "dependencies": {
+          "CopyDirectory": {
+            "target": "Package",
+            "version": "[1.0.3, )"
+          },
           "Microsoft.DotNet.ILCompiler": {
             "suppressParent": "All",
             "target": "Package",
