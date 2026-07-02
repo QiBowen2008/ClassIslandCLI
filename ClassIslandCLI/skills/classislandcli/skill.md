@@ -39,7 +39,7 @@ tools:
 | 命令 | 用法 |
 |---|---|
 | --SetProfilePath | --SetProfilePath <Profile JSON 文件路径> 设置要操作的 ClassIsland 配置文件 |
-| --SetSettingsfilePath | --SetSettingsfilePath <Settings 文件路径> 设置 Settings 文件路径 |
+| --SetClassIslandPath | --SetClassIslandPath <ClassIsland 安装路径> 设置 ClassIsland 安装路径 |
 
 ### 辅助命令
 
@@ -47,6 +47,8 @@ tools:
 |---|---|
 | --help / -h | 显示帮助信息 |
 | --version / -v | 显示版本号 |
+| --InstallCompletions | 安装 Shell 补全（支持 PowerShell/pwsh、bash、zsh、fish、clink、nushell），已有补全会自动更新 |
+| --InstallSkills | 安装 ClassIslandCLI Skills 到 WorkBuddy，已有 Skills 会被覆盖 |
 
 ## --SetSubject 参数说明
 

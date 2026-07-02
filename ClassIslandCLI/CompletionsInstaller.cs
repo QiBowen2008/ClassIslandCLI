@@ -1,4 +1,4 @@
-//此文件为AI生成，不能保证补全脚本能够正确添加，尤其是Mac，这个平台我目前无法测试
+//此文件为AI生成，不能保证补全脚本能够正确添加并运行，尤其是Mac，这个平台我目前无法测试
 using Microsoft.Win32;
 using System.Runtime.InteropServices;
 
@@ -18,125 +18,23 @@ namespace ClassIslandCLI
             Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData),
             "ClassIslandCLI", "completions");
 
-        private static readonly string PsCompletion = @"
-# ClassIslandCLI PowerShell 补全
-# Auto-installed by ClassIslandCLI
+        private static readonly string PsProfileSnippet = @"
 
-Register-ArgumentCompleter -CommandName classislandcli, ClassIslandCLI, dotnet -ParameterName args -ScriptBlock {
-    param($wordToComplete, $commandAst, $cursorPosition)
-
-    $allArgs = $commandAst.CommandElements |
-        Where-Object { $_.GetType().Name -eq 'StringConstantExpressionAst' } |
-        Select-Object -ExpandProperty Value
-
-    $start = 0
-    if ($allArgs[0] -eq 'dotnet' -and $allArgs[1] -eq 'run') {
-        $start = 2
-        if ($allArgs[2] -eq 'classislandcli' -or $allArgs[2] -eq 'ClassIslandCLI') {
-            $start = 3
-        }
+# region ClassIslandCLI completion
+try {
+    [string[]]$c = @('--help', '-h', '--version', '-v', '--SetProfilePath', '--SetClassIslandPath', '--GetSubjects', '--GetTimelayouts', '--GetClassplans', '--SetSubject', '--DeleteSubject', '--AddTimeLayout', '--AddLayout', '--DeleteTimeLayout', '--PExchangeClass', '--TExchangeClass', '--InstallCompletions', '--InstallSkills')
+    Register-ArgumentCompleter -Native -CommandName classislandcli, ClassIslandCLI -ScriptBlock {
+        param($w, $a, $p)
+        if ($w -match '^-') { return $c | ? { $_ -like ""$w*"" } }
+        $r = @($a.CommandElements | select -Skip 1 | % { $_.Extent.Text })
+        if (-not ($r | ? { $_ -match '^--' })) { return $c | ? { $_ -like ""$w*"" } }
+        return @()
     }
-    $cliArgs = $allArgs[$start..($allArgs.Count - 1)]
-    if ($null -eq $cliArgs) { $cliArgs = @() }
-
-    $topCommands = @(
-        '--help', '-h',
-        '--version', '-v',
-        '--SetProfilePath',
-        '--SetClassIslandPath',
-        '--GetSubjects',
-        '--GetTimelayouts',
-        '--GetClassplans',
-        '--AddSubject',
-        '--DeleteSubject',
-        '--AddTimeLayout',
-        '--AddLayout',
-        '--DeleteTimeLayout',
-        '--PExchangeClass',
-        '--TExchangeClass',
-        '--InstallCompletions'
-    )
-
-    $foundCommand = $false
-    $currentCommand = ''
-    $cmdIndex = -1
-    for ($i = 0; $i -lt $cliArgs.Count; $i++) {
-        if ($cliArgs[$i] -match '^--') {
-            $foundCommand = $true
-            $currentCommand = $cliArgs[$i]
-            $cmdIndex = $i
-            break
-        }
-    }
-
-    if (-not $foundCommand) {
-        return $topCommands | Where-Object { $_ -like ""$wordToComplete*"" }
-    }
-
-    $paramsAfterCmd = $cliArgs[($cmdIndex + 1)..($cliArgs.Count - 1)]
-    if ($null -eq $paramsAfterCmd) { $paramsAfterCmd = @() }
-    $posArgCount = ($paramsAfterCmd | Where-Object { -not ($_ -match '^--') }).Count
-
-    $optionalParams = @(
-        '--StartSecond', '--EndSecond', '--TimeType', '--IsHideDefault',
-        '--DefaultClassId', '--ActionSet', '--ClassOnNotificationEnabled',
-        '--ClassOnPreparingNotificationEnabled', '--ClassOffNotificationEnabled',
-        '--ClassOnMaskText', '--ClassOnPreparingMaskText', '--ClassOffMaskText',
-        '--ClassOnPreparingText', '--ClassOffOverlayText',
-        '--OutdoorClassOnPreparingText', '--OutdoorClassOnPreparingMaskText',
-        '--ClassPreparingDeltaTime'
-    )
-
-    switch ($currentCommand) {
-        '--SetProfilePath' {
-            if ($posArgCount -eq 0) { return @() }
-        }
-        '--SetClassIslandPath' {
-            if ($posArgCount -eq 0) { return @() }
-        }
-        '--AddSubject' {
-            if ($posArgCount -le 2) {
-                switch ($posArgCount) {
-                    0 { return @() }
-                    1 { return @() }
-                    2 { return 'true', 'false' | Where-Object { $_ -like ""$wordToComplete*"" } }
-                }
-            }
-            if ($wordToComplete -match '^--') {
-                return $optionalParams | Where-Object { $_ -like ""$wordToComplete*"" }
-            }
-            return @()
-        }
-        '--DeleteSubject' {
-            if ($posArgCount -eq 0) { return @() }
-        }
-        '--AddTimeLayout' {
-            if ($posArgCount -eq 0) { return @() }
-        }
-        '--AddLayout' {
-            if ($posArgCount -le 2) {
-                if ($posArgCount -eq 0) { return @() }
-                if ($posArgCount -eq 1) { return @() }
-                if ($posArgCount -eq 2) { return @() }
-            }
-            if ($wordToComplete -match '^--') {
-                return $optionalParams | Where-Object { $_ -like ""$wordToComplete*"" }
-            }
-            return @()
-        }
-        '--DeleteTimeLayout' {
-            if ($posArgCount -eq 0) { return @() }
-        }
-        '--PExchangeClass' {
-            if ($posArgCount -le 2) { return @() }
-        }
-        '--TExchangeClass' {
-            if ($posArgCount -le 2) { return @() }
-        }
-        default { return @() }
-    }
-}
+} catch {}
+# endregion
 ";
+
+
 
         private static readonly string FishCompletion = @"
 # ClassIslandCLI fish shell 补全
@@ -149,7 +47,7 @@ complete -c ClassIslandCLI -l SetClassIslandPath -d ""设置 ClassIsland 路径"
 complete -c ClassIslandCLI -l GetSubjects       -d ""获取科目信息""
 complete -c ClassIslandCLI -l GetTimelayouts    -d ""获取时间表信息""
 complete -c ClassIslandCLI -l GetClassplans     -d ""获取课表信息（含科目名称）""
-complete -c ClassIslandCLI -l AddSubject        -d ""添加新科目""                      -x
+complete -c ClassIslandCLI -l SetSubject        -d ""添加/编辑科目""                      -x
 complete -c ClassIslandCLI -l DeleteSubject     -d ""删除科目""                        -x
 complete -c ClassIslandCLI -l AddTimeLayout     -d ""添加新时间表""                    -x
 complete -c ClassIslandCLI -l AddLayout         -d ""向时间表添加时间段""              -x
@@ -157,6 +55,7 @@ complete -c ClassIslandCLI -l DeleteTimeLayout  -d ""删除时间表""          
 complete -c ClassIslandCLI -l PExchangeClass    -d ""永久调课：直接交换课表中两节课""  -x
 complete -c ClassIslandCLI -l TExchangeClass    -d ""临时调课：创建叠加层副本交换课程""-x
 complete -c ClassIslandCLI -l InstallCompletions -d ""安装 Shell 补全""
+complete -c ClassIslandCLI -l InstallSkills       -d ""安装 ClassIslandCLI Skills""
 
 set -l optional_opts \
     StartSecond     '秒数' \
@@ -180,7 +79,7 @@ set -l optional_opts \
 for i in (seq 1 2 (count $optional_opts))
     set opt $optional_opts[$i]
     set desc $optional_opts[(math $i + 1)]
-    complete -c ClassIslandCLI -l ""$opt"" -d ""$desc"" -x -n ""__fish_seen_subcommand_from --AddLayout; or __fish_seen_subcommand_from --AddSubject""
+    complete -c ClassIslandCLI -l ""$opt"" -d ""$desc"" -x -n ""__fish_seen_subcommand_from --AddLayout; or __fish_seen_subcommand_from --SetSubject""
 end
 ";
 
@@ -199,7 +98,7 @@ top_commands=(
     '--GetSubjects[获取科目信息]'
     '--GetTimelayouts[获取时间表信息]'
     '--GetClassplans[获取课表信息（含科目名称）]'
-    '--AddSubject[添加新科目]: :->addsubject-args'
+    '--SetSubject[添加/编辑科目]: :->addsubject-args'
     '--DeleteSubject[删除科目]:科目名称:'
     '--AddTimeLayout[添加新时间表]:时间表名称:'
     '--AddLayout[向时间表添加时间段]: :->addlayout-args'
@@ -207,6 +106,7 @@ top_commands=(
     '--PExchangeClass[永久调课：直接交换两节课]: :->exchange-args'
     '--TExchangeClass[临时调课：创建叠加层副本交换课程]: :->exchange-args'
     '--InstallCompletions[安装 Shell 补全]'
+    '--InstallSkills[安装 ClassIslandCLI Skills]'
 )
 
 local -a optional_opts
@@ -255,6 +155,127 @@ case $state in
             '3: :_message ""第二节 (1-based 索引)""'
         ;;
 esac
+";
+
+        private static readonly string BashCompletion = @"
+# ClassIslandCLI bash 补全
+# Auto-installed by ClassIslandCLI
+
+_classislandcli() {
+    local cur=""${COMP_WORDS[COMP_CWORD]}""
+    local prev=""${COMP_WORDS[COMP_CWORD-1]}""
+
+    # First argument: suggest all top-level commands
+    if [[ $COMP_CWORD -eq 1 ]]; then
+        COMPREPLY=($(compgen -W ""--help -h --version -v --SetProfilePath --SetClassIslandPath --GetSubjects --GetTimelayouts --GetClassplans --SetSubject --DeleteSubject --AddTimeLayout --AddLayout --DeleteTimeLayout --PExchangeClass --TExchangeClass --InstallCompletions --InstallSkills"" -- ""$cur""))
+        return
+    fi
+
+    # Find which command was given
+    local cmd=""""
+    for ((i=1; i<COMP_CWORD; i++)); do
+        if [[ ""${COMP_WORDS[i]}"" == --* ]] || [[ ""${COMP_WORDS[i]}"" == -* ]]; then
+            cmd=""${COMP_WORDS[i]}""
+            break
+        fi
+    done
+    [[ -z ""$cmd"" ]] && return
+
+    # Count positional (non-option) args before the current word
+    local pos=0
+    for ((i=2; i<COMP_CWORD; i++)); do
+        [[ ""${COMP_WORDS[i]}"" != --* ]] && ((pos++))
+    done
+
+    local optional=""--StartSecond --EndSecond --TimeType --IsHideDefault --DefaultClassId --ActionSet --ClassOnNotificationEnabled --ClassOnPreparingNotificationEnabled --ClassOffNotificationEnabled --ClassOnMaskText --ClassOnPreparingMaskText --ClassOffMaskText --ClassOnPreparingText --ClassOffOverlayText --OutdoorClassOnPreparingText --OutdoorClassOnPreparingMaskText --ClassPreparingDeltaTime""
+
+    case ""$cmd"" in
+        --SetSubject)
+            if [[ ""$cur"" == --* ]]; then
+                COMPREPLY=($(compgen -W ""$optional"" -- ""$cur""))
+            elif [[ $pos -eq 2 ]]; then
+                COMPREPLY=($(compgen -W ""true false"" -- ""$cur""))
+            fi
+            ;;
+        --AddLayout)
+            if [[ ""$cur"" == --* ]]; then
+                COMPREPLY=($(compgen -W ""$optional"" -- ""$cur""))
+            fi
+            ;;
+        --SetProfilePath|--SetClassIslandPath|--DeleteSubject|--AddTimeLayout|--DeleteTimeLayout)
+            ;;
+        --PExchangeClass|--TExchangeClass)
+            ;;
+    esac
+}
+
+complete -F _classislandcli classislandcli ClassIslandCLI
+";
+
+        private static readonly string ClinkCompletion = @"
+-- ClassIslandCLI clink 补全
+-- Auto-installed by ClassIslandCLI
+
+local commands = {
+    ""--help"", ""-h"",
+    ""--version"", ""-v"",
+    ""--SetProfilePath"", ""--SetClassIslandPath"",
+    ""--GetSubjects"", ""--GetTimelayouts"", ""--GetClassplans"",
+    ""--SetSubject"", ""--DeleteSubject"",
+    ""--AddTimeLayout"", ""--AddLayout"",
+    ""--DeleteTimeLayout"",
+    ""--PExchangeClass"", ""--TExchangeClass"",
+    ""--InstallCompletions"", ""--InstallSkills""
+}
+
+clink.argmatcher(""classislandcli"")
+    :addflags(commands)
+
+clink.argmatcher(""ClassIslandCLI"")
+    :addflags(commands)
+";
+
+        private static readonly string NuCompletion = @"
+# ClassIslandCLI nushell 补全
+# Auto-installed by ClassIslandCLI
+
+export extern ""classislandcli"" [
+    --help(-h)                      # 显示帮助信息
+    --version(-v)                   # 显示版本号
+    --SetProfilePath: path          # 设置 Default.json 路径
+    --SetClassIslandPath: path      # 设置 ClassIsland 路径
+    --GetSubjects                   # 获取科目信息
+    --GetTimelayouts                # 获取时间表信息
+    --GetClassplans                 # 获取课表信息
+    --SetSubject                    # 添加/编辑科目
+    --DeleteSubject                 # 删除科目
+    --AddTimeLayout                 # 添加新时间表
+    --AddLayout                     # 向时间表添加时间段
+    --DeleteTimeLayout              # 删除时间表
+    --PExchangeClass                # 永久调课
+    --TExchangeClass                # 临时调课
+    --InstallCompletions            # 安装 Shell 补全
+    --InstallSkills                 # 安装 Skills
+]
+
+export extern ""ClassIslandCLI"" [
+    --help(-h)
+    --version(-v)
+    --SetProfilePath: path
+    --SetClassIslandPath: path
+    --GetSubjects
+    --GetTimelayouts
+    --GetClassplans
+    --SetSubject
+    --DeleteSubject
+    --AddTimeLayout
+    --AddLayout
+    --DeleteTimeLayout
+    --PExchangeClass
+    --TExchangeClass
+    --InstallCompletions
+    --InstallSkills
+]
 ";
 
         // ====================================================================
@@ -312,15 +333,16 @@ esac
         private static int InstallOnWindows()
         {
             int count = 0;
+            string userProfile = Environment.GetFolderPath(Environment.SpecialFolder.UserProfile);
 
-            // 1) PowerShell
-            if (TryInstallPowerShell())
+            // 1) pwsh (PowerShell 7+)
+            if (TryInstallPwsh(userProfile))
             {
-                Console.WriteLine("  [OK] PowerShell 补全已安装");
+                Console.WriteLine("  [OK] pwsh 补全已安装");
                 count++;
             }
             else
-                Console.WriteLine("  [--] PowerShell 未检测到或安装失败");
+                Console.WriteLine("  [--] pwsh 未检测到或安装失败");
 
             // 2) Cygwin
             string? cygwinRoot = FindCygwinRoot();
@@ -336,9 +358,14 @@ esac
                 { Console.WriteLine("  [OK] zsh (Cygwin) 补全已安装"); count++; }
                 else
                     Console.WriteLine("  [--] zsh (Cygwin) 未检测到或安装失败");
+
+                if (TryInstallBash(home))
+                { Console.WriteLine("  [OK] bash (Cygwin) 补全已安装"); count++; }
+                else
+                    Console.WriteLine("  [--] bash (Cygwin) 未检测到或安装失败");
             }
             else
-                Console.WriteLine("  [--] Cygwin 未检测到，跳过 fish/zsh");
+                Console.WriteLine("  [--] Cygwin 未检测到，跳过 fish/zsh/bash");
 
             // 3) MSYS2
             string? msys2Root = FindMsys2Root();
@@ -354,9 +381,26 @@ esac
                 { Console.WriteLine("  [OK] zsh (MSYS2) 补全已安装"); count++; }
                 else
                     Console.WriteLine("  [--] zsh (MSYS2) 未检测到或安装失败");
+
+                if (TryInstallBash(home))
+                { Console.WriteLine("  [OK] bash (MSYS2) 补全已安装"); count++; }
+                else
+                    Console.WriteLine("  [--] bash (MSYS2) 未检测到或安装失败");
             }
             else
-                Console.WriteLine("  [--] MSYS2 未检测到，跳过 fish/zsh");
+                Console.WriteLine("  [--] MSYS2 未检测到，跳过 fish/zsh/bash");
+
+            // 4) Clink
+            if (TryInstallClink())
+            { Console.WriteLine("  [OK] clink 补全已安装"); count++; }
+            else
+                Console.WriteLine("  [--] clink 未检测到或安装失败");
+
+            // 5) Nushell
+            if (TryInstallNushell(userProfile))
+            { Console.WriteLine("  [OK] nushell 补全已安装"); count++; }
+            else
+                Console.WriteLine("  [--] nushell 未检测到或安装失败");
 
             return count;
         }
@@ -383,103 +427,54 @@ esac
                 Console.WriteLine("  [--] zsh 未检测到或安装失败");
 
             // 3) pwsh
-            if (TryInstallPwshUnix(home))
-            { Console.WriteLine("  [OK] PowerShell (pwsh) 补全已安装"); count++; }
+            if (TryInstallPwsh(home))
+            { Console.WriteLine("  [OK] pwsh 补全已安装"); count++; }
             else
                 Console.WriteLine("  [--] pwsh 未检测到或安装失败");
+
+            // 4) bash
+            if (TryInstallBash(home))
+            { Console.WriteLine("  [OK] bash 补全已安装"); count++; }
+            else
+                Console.WriteLine("  [--] bash 未检测到或安装失败");
+
+            // 5) nushell
+            if (TryInstallNushell(home))
+            { Console.WriteLine("  [OK] nushell 补全已安装"); count++; }
+            else
+                Console.WriteLine("  [--] nushell 未检测到或安装失败");
 
             return count;
         }
 
         // ====================================================================
-        // PowerShell (Windows)
+        // pwsh (跨平台，PowerShell 7+)
         // ====================================================================
 
-        private static bool TryInstallPowerShell()
+        private static bool TryInstallPwsh(string home)
         {
             try
             {
-                string userProfile = Environment.GetFolderPath(Environment.SpecialFolder.UserProfile);
-
-                var profiles = new List<string>();
-
-                string pwshProfileDir = Path.Combine(userProfile, "Documents", "PowerShell");
-                string pwshProfile = Path.Combine(pwshProfileDir, "Microsoft.PowerShell_profile.ps1");
-                if (Directory.Exists(pwshProfileDir) || HasPwshInPath())
-                    profiles.Add(pwshProfile);
-
-                string winPsProfileDir = Path.Combine(userProfile, "Documents", "WindowsPowerShell");
-                string winPsProfile = Path.Combine(winPsProfileDir, "Microsoft.PowerShell_profile.ps1");
-                if (Directory.Exists(winPsProfileDir) || HasWindowsPowerShellInPath())
-                    profiles.Add(winPsProfile);
-
-                if (profiles.Count == 0) return false;
-
-                Directory.CreateDirectory(DataDir);
-                string psScriptPath = Path.Combine(DataDir, "classislandcli.ps1");
-                File.WriteAllText(psScriptPath, PsCompletion);
-
-                string dotSourceLine = $@". ""{psScriptPath}""";
-
-                foreach (var profilePath in profiles)
-                {
-                    Directory.CreateDirectory(Path.GetDirectoryName(profilePath)!);
-
-                    if (File.Exists(profilePath))
-                    {
-                        string content = File.ReadAllText(profilePath);
-                        if (content.Contains(dotSourceLine)) continue;
-                    }
-
-                    File.AppendAllText(profilePath,
-                        (File.Exists(profilePath) ? "\n" : "") +
-                        $"# ClassIslandCLI completion{Environment.NewLine}{dotSourceLine}{Environment.NewLine}");
-                }
-
-                return true;
-            }
-            catch
-            {
-                return false;
-            }
-        }
-
-        // ====================================================================
-        // pwsh (Unix)
-        // ====================================================================
-
-        private static bool TryInstallPwshUnix(string home)
-        {
-            try
-            {
-                // 检查 pwsh 是否在 PATH 中
                 if (!HasPwshInPath()) return false;
 
-                // pwsh 在 Linux/macOS 上通常使用 ~/.config/powershell/
                 string pwshDir;
-                if (IsMacOS)
-                    pwshDir = Path.Combine(home, ".config", "powershell");
+                if (IsWindows)
+                    pwshDir = Path.Combine(home, "Documents", "PowerShell");
                 else
-                    pwshDir = Path.Combine(home, ".config", "powershell");  // Linux also uses ~/.config/powershell
+                    pwshDir = Path.Combine(home, ".config", "powershell");
 
                 string profilePath = Path.Combine(pwshDir, "Microsoft.PowerShell_profile.ps1");
                 Directory.CreateDirectory(pwshDir);
 
-                Directory.CreateDirectory(DataDir);
-                string psScriptPath = Path.Combine(DataDir, "classislandcli.ps1");
-                File.WriteAllText(psScriptPath, PsCompletion);
-
-                string dotSourceLine = $@". ""{psScriptPath}""";
-
+                // 强制覆盖：先移除旧版 ClassIslandCLI 段落，再写入新版
+                string content = "";
                 if (File.Exists(profilePath))
-                {
-                    string content = File.ReadAllText(profilePath);
-                    if (content.Contains(dotSourceLine)) return true;
-                }
+                    content = File.ReadAllText(profilePath);
 
-                File.AppendAllText(profilePath,
-                    (File.Exists(profilePath) ? "\n" : "") +
-                    $"# ClassIslandCLI completion{Environment.NewLine}{dotSourceLine}{Environment.NewLine}");
+                content = StripSection(content, "# region ClassIslandCLI completion", "# endregion");
+
+                File.WriteAllText(profilePath,
+                    content.TrimEnd() + PsProfileSnippet);
 
                 return true;
             }
@@ -533,28 +528,133 @@ esac
                 Directory.CreateDirectory(zshCompDir);
                 File.WriteAllText(Path.Combine(zshCompDir, "_classislandcli"), ZshCompletion);
 
-                // 确保 .zshrc 中有 fpath 设置
+                // 确保 .zshrc 中有 fpath 设置（强制覆盖）
                 string zshrc = Path.Combine(home, ".zshrc");
                 string fpathLine = "fpath=(~/.zsh/completions $fpath)";
 
                 if (!File.Exists(zshrc) && !HasCommandInPath("zsh"))
                     return false;  // zsh 未安装
 
-                if (File.Exists(zshrc))
+                string content = File.Exists(zshrc) ? File.ReadAllText(zshrc) : "";
+                content = StripSection(content, "# ClassIslandCLI completion", fpathLine);
+
+                File.WriteAllText(zshrc,
+                    content.TrimEnd() +
+                    $"{Environment.NewLine}# ClassIslandCLI completion{Environment.NewLine}{fpathLine}{Environment.NewLine}");
+
+                return true;
+            }
+            catch
+            {
+                return false;
+            }
+        }
+
+        // ====================================================================
+        // bash (跨平台)
+        // ====================================================================
+
+        private static bool TryInstallBash(string home)
+        {
+            try
+            {
+                string bashCompDir = Path.Combine(home, ".bash_completion.d");
+
+                // 检查 bash 是否可用：有 .bashrc 或在 PATH 中
+                if (!File.Exists(Path.Combine(home, ".bashrc")) &&
+                    !File.Exists(Path.Combine(home, ".bash_profile")) &&
+                    !HasCommandInPath("bash"))
+                    return false;
+
+                Directory.CreateDirectory(bashCompDir);
+                File.WriteAllText(Path.Combine(bashCompDir, "classislandcli"), BashCompletion);
+
+                // 在 .bashrc 中添加自动加载行（强制覆盖）
+                string bashrc = Path.Combine(home, ".bashrc");
+                string sourceLine = "for f in ~/.bash_completion.d/*; do [ -f \"$f\" ] && source \"$f\"; done";
+
+                string content = File.Exists(bashrc) ? File.ReadAllText(bashrc) : "";
+                content = StripSection(content, "# ClassIslandCLI completion", sourceLine);
+
+                File.WriteAllText(bashrc,
+                    content.TrimEnd() +
+                    $"{Environment.NewLine}# ClassIslandCLI completion{Environment.NewLine}{sourceLine}{Environment.NewLine}");
+
+                return true;
+            }
+            catch
+            {
+                return false;
+            }
+        }
+
+        // ====================================================================
+        // clink (仅 Windows)
+        // ====================================================================
+
+        [System.Runtime.Versioning.SupportedOSPlatform("windows")]
+        private static bool TryInstallClink()
+        {
+            try
+            {
+                string localAppData = Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData);
+                string clinkDir = Path.Combine(localAppData, "clink");
+
+                // 检查 clink 是否已初始化
+                if (!Directory.Exists(clinkDir))
                 {
-                    string content = File.ReadAllText(zshrc);
-                    if (!content.Contains(fpathLine))
-                    {
-                        File.AppendAllText(zshrc,
-                            $"{Environment.NewLine}# ClassIslandCLI completion{Environment.NewLine}{fpathLine}{Environment.NewLine}");
-                    }
-                }
-                else
-                {
-                    File.WriteAllText(zshrc,
-                        $"# ClassIslandCLI completion{Environment.NewLine}{fpathLine}{Environment.NewLine}");
+                    if (!HasCommandInPath("clink.exe") && !HasCommandInPath("clink"))
+                        return false;
+                    Directory.CreateDirectory(clinkDir);
                 }
 
+                File.WriteAllText(Path.Combine(clinkDir, "classislandcli.lua"), ClinkCompletion);
+                return true;
+            }
+            catch
+            {
+                return false;
+            }
+        }
+
+        // ====================================================================
+        // nushell (跨平台)
+        // ====================================================================
+
+        private static bool TryInstallNushell(string home)
+        {
+            try
+            {
+                string nuCompDir;
+
+                if (IsWindows)
+                {
+                    string appData = Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData);
+                    nuCompDir = Path.Combine(appData, "nushell", "completions");
+                }
+                else if (IsMacOS)
+                {
+                    nuCompDir = Path.Combine(home, "Library", "Application Support", "nushell", "completions");
+                }
+                else // Linux
+                {
+                    string xdgConfig = Environment.GetEnvironmentVariable("XDG_CONFIG_HOME")
+                        ?? Path.Combine(home, ".config");
+                    nuCompDir = Path.Combine(xdgConfig, "nushell", "completions");
+                }
+
+                // 检查 nushell 是否已初始化
+                if (!Directory.Exists(Path.GetDirectoryName(nuCompDir)!))
+                {
+                    if (!HasCommandInPath("nu") && !HasCommandInPath("nu.exe"))
+                        return false;
+                }
+
+                Directory.CreateDirectory(nuCompDir);
+
+                // 写入两个文件以兼容大小写
+                File.WriteAllText(Path.Combine(nuCompDir, "classislandcli.nu"), NuCompletion);
+                File.WriteAllText(Path.Combine(nuCompDir, "ClassIslandCLI.nu"), NuCompletion);
                 return true;
             }
             catch
@@ -566,6 +666,29 @@ esac
         // ====================================================================
         // 环境探测
         // ====================================================================
+
+        /// <summary>
+        /// 从文本中移除匹配 startMarker 到 endMarker 之间的内容（含标记行本身）。
+        /// 用于 profile 文件更新时清理旧版 ClassIslandCLI 段落。
+        /// </summary>
+        private static string StripSection(string text, string startMarker, string endMarker)
+        {
+            var startIdx = text.IndexOf(startMarker, StringComparison.Ordinal);
+            if (startIdx < 0) return text;
+
+            var endIdx = text.IndexOf(endMarker, startIdx + startMarker.Length, StringComparison.Ordinal);
+            if (endIdx < 0) return text;
+
+            // 延伸到 endMarker 行尾
+            var lineEnd = text.IndexOf('\n', endIdx);
+            if (lineEnd >= 0) endIdx = lineEnd;
+
+            // 向前延伸到 startMarker 行首或前一个换行符
+            var lineStart = text.LastIndexOf('\n', startIdx);
+            if (lineStart < 0) lineStart = 0;
+
+            return text.Remove(lineStart, endIdx - lineStart);
+        }
 
         [System.Runtime.Versioning.SupportedOSPlatform("windows")]
         private static string? FindCygwinRoot()
@@ -642,11 +765,6 @@ esac
         private static bool HasPwshInPath()
         {
             return HasCommandInPath("pwsh") || HasCommandInPath("pwsh.exe");
-        }
-
-        private static bool HasWindowsPowerShellInPath()
-        {
-            return HasCommandInPath("powershell.exe");
         }
 
         private static bool HasCommandInPath(string command)

@@ -23,7 +23,8 @@ class Program
                 Console.WriteLine("    --IsHideDefault <true/false>");
                 Console.WriteLine("    --DefaultClassId <GUID>");
                Console.WriteLine("    --ActionSet <值>");
-               Console.WriteLine("--InstallCompletions:安装 Shell 补全文件");
+               Console.WriteLine("--InstallCompletions:安装 Shell 补全文件（支持 PowerShell/pwsh、bash、zsh、fish、clink、nushell）");
+               Console.WriteLine("--InstallSkills:安装 ClassIslandCLI 的 Skills 到 ~/.openclaw/skills");
                 Console.WriteLine("--help:显示帮助");
     }
     static void Main(string[] args)
@@ -46,7 +47,7 @@ class Program
 
             if (args[i] == "-v" || args[i] == "--version")
             {
-                Console.WriteLine("版本号1.0");
+                Console.WriteLine("版本号 1.0.2.0");
             }
 
            if (args[i] == "--SetClassIslandPath")
@@ -259,9 +260,10 @@ class Program
                 {
                     IO.CopyDirectory("./skills/classislandcli", Environment.GetFolderPath(Environment.SpecialFolder.UserProfile) + "/.openclaw/skills/classislandcli");
                 }
-                catch
+                catch (Exception ex)
                 {
-                    Console.WriteLine("安装skills失败，请手动安装skills");
+                    Console.WriteLine($"安装 skills 失败: {ex.Message}");
+                    Console.WriteLine("请手动安装 skills");
                 }
             } 
 

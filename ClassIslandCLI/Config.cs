@@ -54,7 +54,7 @@ namespace ClassIslandCLI
 
                public static void SetClassIslandPath(string ClassIslandPath)
                 {
-                       if (File.Exists(ClassIslandPath))
+                       if (Directory.Exists(ClassIslandPath))
                         {
 
                                 string jsonString = File.ReadAllText(AppContext.BaseDirectory + "Config.json");
@@ -65,7 +65,7 @@ namespace ClassIslandCLI
                         }
                         else
                         {
-                                Console.WriteLine("你所指定的文件不存在");
+                                Console.WriteLine("你所指定的目录不存在");
                         }
                 }
                 
