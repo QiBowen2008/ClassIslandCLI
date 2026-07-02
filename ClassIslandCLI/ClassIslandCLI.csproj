@@ -24,10 +24,8 @@
 </ItemGroup>
     <ItemGroup>
       <None Update="Config.json">
-        <CopyToOutputDirectory>Always</CopyToOutputDirectory>
       </None>
       <None Update="Default.json">
-        <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
       </None>
       <None Update="skills\classislandcli\skill.md">
         <CopyToOutputDirectory>Always</CopyToOutputDirectory>

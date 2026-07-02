@@ -34,11 +34,26 @@ public record SubjectInfo(
 public static class ProfileManager
 {
     static string profilePath = GetConfig.GetConfigs().ProfilePath;
-    static string profileString = File.ReadAllText(profilePath);
-    static JsonNode root = JsonNode.Parse(profileString)!;
+    static JsonNode root = LoadProfile(profilePath);
+
+    /// <summary>
+    /// 加载课表 JSON。如果路径为空或文件不存在，返回一个空的 JsonObject，
+    /// 避免 ProfileManager 静态构造抛异常导致整个程序无法启动。
+    /// </summary>
+    static JsonNode LoadProfile(string path)
+    {
+        if (string.IsNullOrWhiteSpace(path) || !File.Exists(path))
+            return new JsonObject();
+        return JsonNode.Parse(File.ReadAllText(path)) ?? new JsonObject();
+    }
 
     static void SaveProfile()
     {
+        if (string.IsNullOrWhiteSpace(profilePath) || !File.Exists(profilePath))
+        {
+            Console.WriteLine("错误：ProfilePath 未设置或文件不存在，无法保存。请先使用 --SetProfilePath 设置。");
+            return;
+        }
         var options = new JsonSerializerOptions { WriteIndented = false };
         File.WriteAllText(profilePath, root.ToJsonString(options));
         File.Copy(profilePath, profilePath + ".bak", true);
